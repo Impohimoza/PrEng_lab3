@@ -61,11 +61,28 @@ class UsersRepositoryInMemory:
     def delete(self, user_id):
         """
         Функция удаляет пользователя по айди
-        
-        :param user_id: айди пользователя  
-        """            
+
+        :param user_id: айди пользователя
+        """
         user = next((u for u in self.users if u["id"] == user_id), None)
         if not user:
-            raise ValueError("User not found")            
-        
+            raise ValueError("User not found")
+
         self.users = [u for u in self.users if u["id"] != user_id]
+
+    def get_stats(self):
+        """
+        Функция возвращает статистику по пользователям
+
+        :return: словарь со статистикой (total, avg_age, min_age, max_age)
+        """
+        if not self.users:
+            return {"total": 0}
+
+        ages = [u["age"] for u in self.users]
+        return {
+            "total": len(self.users),
+            "avg_age": round(sum(ages) / len(ages), 1),
+            "min_age": min(ages),
+            "max_age": max(ages)
+        }
