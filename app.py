@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 
 from src.user_repo import UsersRepositoryInMemory
+from src.validation import validate_user
 
 app = Flask(__name__)
 
@@ -24,6 +25,10 @@ def get_user(user_id):
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
+    is_valid, message = validate_user(data)
+    if not is_valid:
+        return jsonify({"error": message}), 400
+    
     new_user = {
         "id": len(len(user_repo)) + 1,
         "name": data.get("name"),
