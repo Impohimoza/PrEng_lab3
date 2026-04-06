@@ -1,22 +1,21 @@
 from flask import Flask, request, jsonify
 
+from src.user_repo import UsersRepositoryInMemory
+
 app = Flask(__name__)
 
 # Простая база данных в памяти
-users = [
-    {"id": 1, "name": "Alice", "age": 25},
-    {"id": 2, "name": "Bob", "age": 30}
-]
+user_repo = UsersRepositoryInMemory()
 
 # GET - получить всех пользователей
 @app.route('/users', methods=['GET'])
 def get_users():
-    return jsonify(users)
+    return jsonify(user_repo.get_all())
 
 # GET - получить одного пользователя
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    user = next((u for u in users if u["id"] == user_id), None)
+    user = user_repo.get(user_id)
     if user:
         return jsonify(user)
     return jsonify({"error": "User not found"}), 404
@@ -26,34 +25,32 @@ def get_user(user_id):
 def create_user():
     data = request.get_json()
     new_user = {
-        "id": len(users) + 1,
+        "id": len(len(user_repo)) + 1,
         "name": data.get("name"),
         "age": data.get("age")
     }
-    users.append(new_user)
+    user_repo.add(new_user)
     return jsonify(new_user), 201
 
 # PUT - обновить пользователя
 @app.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
-    user = next((u for u in users if u["id"] == user_id), None)
+    user = user_repo.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
     
     data = request.get_json()
-    user["name"] = data.get("name", user["name"])
-    user["age"] = data.get("age", user["age"])
-    return jsonify(user)
+    updated_user = user_repo.update(user_id=user_id, data=data)
+    return jsonify(updated_user)
 
 # DELETE - удалить пользователя
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    global users
-    user = next((u for u in users if u["id"] == user_id), None)
+    user = user_repo.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
     
-    users = [u for u in users if u["id"] != user_id]
+    user_repo.delete(user_id)
     return jsonify({"message": "User deleted"}), 200
 
 if __name__ == '__main__':
