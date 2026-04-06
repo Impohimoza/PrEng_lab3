@@ -61,10 +61,6 @@ def delete_user(user_id):
     user_repo.delete(user_id)
     return jsonify({"message": "User deleted"}), 200
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-
-    
 @app.route('/users/search', methods=['GET'])
 def search_users():
     """Поиск пользователей по имени"""
@@ -79,3 +75,6 @@ def search_users():
         "count": len(result),
         "results": result
     })
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
