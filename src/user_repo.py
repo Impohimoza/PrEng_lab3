@@ -23,7 +23,7 @@ class UsersRepositoryInMemory:
         
         :return: json объект
         """            
-        return jsonify(self.users)
+        return self.users
 
     def add(self, new_user):
         """
