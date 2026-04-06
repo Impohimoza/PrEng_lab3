@@ -45,6 +45,9 @@ def update_user(user_id):
         return jsonify({"error": "User not found"}), 404
     
     data = request.get_json()
+    is_valid, message = validate_user(data)
+    if not is_valid:
+        return jsonify({"error": message}), 400
     updated_user = user_repo.update(user_id=user_id, data=data)
     return jsonify(updated_user)
 
