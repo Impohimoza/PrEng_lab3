@@ -63,3 +63,19 @@ def delete_user(user_id):
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+    
+@app.route('/users/search', methods=['GET'])
+def search_users():
+    """Поиск пользователей по имени"""
+    name_query = request.args.get('name', '').lower()
+    
+    if not name_query:
+        return jsonify(users)
+    
+    result = [u for u in users if name_query in u['name'].lower()]
+    return jsonify({
+        "query": name_query,
+        "count": len(result),
+        "results": result
+    })
