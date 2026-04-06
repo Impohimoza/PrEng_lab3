@@ -30,7 +30,7 @@ def create_user():
         return jsonify({"error": message}), 400
     
     new_user = {
-        "id": len(len(user_repo)) + 1,
+        "id": len(user_repo) + 1,
         "name": data.get("name"),
         "age": data.get("age")
     }
@@ -61,15 +61,30 @@ def delete_user(user_id):
     user_repo.delete(user_id)
     return jsonify({"message": "User deleted"}), 200
 
+# Статистика по пользователям
+@app.route('/users/stats', methods=['GET'])
+def get_stats():
+    users = user_repo.get_all()
+    if not users:
+        return jsonify({"total": 0})
+
+    ages = [u["age"] for u in users]
+    return jsonify({
+        "total": len(users),
+        "avg_age": round(sum(ages) / len(ages), 1),
+        "min_age": min(ages),
+        "max_age": max(ages)
+    })
+
 @app.route('/users/search', methods=['GET'])
 def search_users():
     """Поиск пользователей по имени"""
     name_query = request.args.get('name', '').lower()
     
     if not name_query:
-        return jsonify(users)
+        return jsonify(user_repo.get_all())
     
-    result = [u for u in users if name_query in u['name'].lower()]
+    result = [u for u in user_repo.get_all() if name_query in u['name'].lower()]
     return jsonify({
         "query": name_query,
         "count": len(result),
