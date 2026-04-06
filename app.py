@@ -64,17 +64,7 @@ def delete_user(user_id):
 # Статистика по пользователям
 @app.route('/users/stats', methods=['GET'])
 def get_stats():
-    users = user_repo.get_all()
-    if not users:
-        return jsonify({"total": 0})
-
-    ages = [u["age"] for u in users]
-    return jsonify({
-        "total": len(users),
-        "avg_age": round(sum(ages) / len(ages), 1),
-        "min_age": min(ages),
-        "max_age": max(ages)
-    })
+    return jsonify(user_repo.get_stats())
 
 @app.route('/users/search', methods=['GET'])
 def search_users():

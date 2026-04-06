@@ -43,3 +43,12 @@ Server runs at `http://localhost:5000`.
 **Validation rules:**
 - `name` — required, string
 - `age` — required, integer, 0–150
+
+## Team
+
+| Name | GitHub |
+|------|--------|
+| Алёшкин Александр Андреевич | [@Axlifreeway](https://github.com/Axlifreeway) |
+| Бекевич Иван Михайлович | [@Impohimoza](https://github.com/Impohimoza) |
+| Березин Роман Вячеславович | [@Shankly8642](https://github.com/Shankly8642) |
+| Вологин Никита Сергеевич | [@malakia3491](https://github.com/malakia3491) |
